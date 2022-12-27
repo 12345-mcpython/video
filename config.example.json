@@ -1,0 +1,30 @@
+{
+    "config": {
+        "mysql": {
+            "host": "127.0.0.1",
+            "port": 3306,
+            "username": "root",
+            "password": "database",
+            "database": "video"
+        },
+        "redis": {
+            "host": "127.0.0.1",
+            "port": 6379,
+            "db": 0
+        },
+        "email": {
+            "email_host": "",
+            "email_port": 465,
+            "email_host_user": "",
+            "email_host_password": "",
+            "email_use_ssl": true,
+            "email_use_tls": false
+        },
+        "index":{
+            "title": "xx视频",
+            "_comment": "key必须为16 24或32的倍数 aes需求",
+            "key": "",
+            "login_time": 15768000
+        }
+    }
+}
