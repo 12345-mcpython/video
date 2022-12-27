@@ -40,6 +40,7 @@ def login(request: HttpRequest):
                 str(int(time.time())) + "|"  + settings.SECRET_KEY
             user_session_id = aes.encrypt(user_session_id.encode())
             user_session_id = base64.b64encode(user_session_id)
+            cache.delete(email + "_verify")
             return JsonResponse({"code": 0, "msg": "老用户登录成功!", "data": {"session_id": user_session_id.decode()}})
         except User.DoesNotExist:
             new_user = User()
@@ -50,6 +51,7 @@ def login(request: HttpRequest):
                 str(int(time.time())) + "|"  + settings.SECRET_KEY
             user_session_id = aes.encrypt(user_session_id.encode())
             user_session_id = base64.b64encode(user_session_id)
+            cache.delete(email + "_verify")
             return JsonResponse({"code": 0, "msg": "新用户登录成功!", "data": {"session_id": user_session_id.decode()}})
     else:
         response = JsonResponse(
@@ -62,14 +64,18 @@ def login(request: HttpRequest):
 def send_code(request: HttpRequest):
     if request.POST:
         email = request.POST.get("email")
-        if cache.get(email) == "sent" and not is_test:
+        is_test = request.POST.get("test_only")
+        if cache.get(email) == "sent" and (not is_test and settings.DEBUG):
             return JsonResponse({"code": 10001, "msg": "发送太频繁! 等待100s后再试! ", "data": {}})
         code = random.randint(100000, 999999)
         captcha_key = uuid.uuid4().hex
         key = captcha_key + "|" + str(code)
         cache.set(email + "_verify", key, 60 * 60 * 2)
         cache.set(email, "sent", 100)
-        tasks.send_email.delay(code, email)
+        if is_test and settings.DEBUG:
+            tasks.send_email(code, email)
+        else:
+            tasks.send_email.delay(code, email)
         return JsonResponse({"code": 0, "msg": "发送成功: " + email, "data": {"captcha_key": captcha_key}})
     else:
         response = JsonResponse(
