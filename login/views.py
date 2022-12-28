@@ -37,7 +37,7 @@ def login(request: HttpRequest):
         try:
             user = User.objects.get(email=email)
             user_session_id = user.email + "|" + \
-                str(int(time.time())) + "|"  + settings.SECRET_KEY
+                              str(int(time.time())) + "|" + settings.SECRET_KEY
             user_session_id = aes.encrypt(user_session_id.encode())
             user_session_id = base64.b64encode(user_session_id)
             cache.delete(email + "_verify")
@@ -48,7 +48,7 @@ def login(request: HttpRequest):
             new_user.email = email
             new_user.save()
             user_session_id = new_user.email + "|" + \
-                str(int(time.time())) + "|"  + settings.SECRET_KEY
+                              str(int(time.time())) + "|" + settings.SECRET_KEY
             user_session_id = aes.encrypt(user_session_id.encode())
             user_session_id = base64.b64encode(user_session_id)
             cache.delete(email + "_verify")

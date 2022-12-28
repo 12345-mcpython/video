@@ -16,10 +16,12 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path
 
+from front.views import index
 from login import views
 
 urlpatterns = [
-    path('admin/', admin.site.urls),
+    path('', index),
     path("api/v1/email/login/send_code", views.send_code),
-    path("api/v1/email/login", views.login)
+    path("api/v1/email/login", views.login),
+    path('admin/', admin.site.urls),
 ]
