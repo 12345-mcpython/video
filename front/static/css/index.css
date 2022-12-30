@@ -3,6 +3,18 @@
     src: url('/static/font/iconfont.ttf?t=1672199544914') format('truetype');
 }
 
+.col-email {
+    flex: 0 0 auto;
+    width: 87%;
+}
+
+.home {
+    width: 1000px;
+    height: 400px;
+    padding: 50px 60px 0;
+}
+
+
 .position-absolute > i {
     font-style: normal !important;
 }
@@ -32,6 +44,19 @@
 
 }
 
+.preview-box, .preview-box-round {
+    box-shadow: 0 0 5px #adadad;
+    width: 100px;
+    height: 100px;
+    margin-top: 30px;
+    overflow: hidden; /*这个超出设置为隐藏很重要，否则就会整个显示出来了*/
+}
+
+.preview-box-round {
+    border-radius: 50%; /*设置为圆形*/
+}
+
+
 .tm-img-overlay {
     top: 0;
     left: 0;
@@ -55,8 +80,7 @@
 .tm-overlay-icon {
     color: #a7a7a7;
     font-size: 2rem;
-    font-family: iconfont;
-    padding: 10px 15px;
+    font-family: iconfont, sans-serif;
     background-color: rgba(0, 0, 0, 0.5);
     border-radius: 50%;
     width: 70px;
@@ -64,7 +88,7 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    padding-right: 8px;
+    padding: 10px 8px 10px 15px;
     z-index: 1002;
     transition: all 0.3s ease;
     opacity: 0;
@@ -81,7 +105,7 @@
     bottom: 0;
     display: flex;
     justify-content: flex-end;
-    padding: 0px 20px;
+    padding: 0 20px;
     width: 100%;
 }
 
@@ -121,5 +145,5 @@
 blockquote, body, button, dd, div, dl, dt, form, h1, h2, h3, h4, h5, h6, input, li, ol, p, pre, td, textarea, th, ul {
     margin: 0;
     padding: 0;
-    -webkit-tap-highlight-color: rgba(0, 0, 0, 0)
+    -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
 }

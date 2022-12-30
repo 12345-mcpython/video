@@ -1,0 +1,10 @@
+Django
+Pillow
+pip
+asgiref
+sqlparse
+PyMySQL
+celery
+eventlet
+paddlepaddle
+paddlehub

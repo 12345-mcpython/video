@@ -20,6 +20,13 @@
             "email_use_ssl": true,
             "email_use_tls": false
         },
+        "storage": {
+            "type": "oss",
+            "ak": "",
+            "sk": "",
+            "bucket": "",
+            "endpoint": ""
+        },
         "index":{
             "title": "xx视频",
             "_comment": "key必须为16 24或32的倍数 aes需求",

@@ -1,0 +1,52 @@
+{% extends 'user/base_user_center.html' %}
+
+{% block title %}用户中心 - {{ title }}{% endblock title %}
+
+{% block custom_css %}
+    {{ block.super }}
+{% endblock custom_css %}
+
+
+{% block content %}
+    {{ block.super }}
+{% endblock content %}
+
+{% block main_user_center %}
+
+    <div class="home">
+        <div class="toast align-items-center text-white bg-success border-0 edit-success" role="alert"
+             aria-live="assertive" aria-atomic="true">
+            <div class="d-flex">
+                <div class="toast-body edit-success-body">
+                    修改成功!
+                </div>
+                <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast"
+                        aria-label="Close"></button>
+            </div>
+        </div>
+        <div class="toast align-items-center text-white bg-danger border-0 edit-fail" role="alert"
+             aria-live="assertive" aria-atomic="true">
+            <div class="d-flex">
+                <div class="toast-body edit-fail-body">
+                </div>
+                <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast"
+                        aria-label="Close"></button>
+            </div>
+        </div>
+        <div class="mb-3 mt-3">
+            <label for="username" class="form-label">昵称:</label>
+            <input type="text" class="form-control" id="username" placeholder="输入你的昵称: " value="{{ user.name }}"
+                   style="width: 200%" maxlength="16">
+        </div>
+        <div class="mb-3 mt-3">
+            <label for="description">个人签名：</label>
+            <textarea class="form-control" rows="5" id="description" name="text"
+                      style="width: 200%">{% if user.description %}{{ user.description }}{% endif %}</textarea>
+        </div>
+        <button type="submit" class="btn btn-primary" id="information-save">保存</button>
+    </div>
+
+{% endblock main_user_center %}
+{% block custom_js %}
+    <script src="/static/js/edit_information.js"></script>
+{% endblock custom_js %}

@@ -1,0 +1,1 @@
+celery -A video.tasks worker -l INFO -P eventlet

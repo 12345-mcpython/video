@@ -1,0 +1,54 @@
+{% extends 'base.html' %}
+
+{% block title %}用户登录 - {{ title }}{% endblock title %}
+
+{% block custom_css %}
+{% endblock custom_css %}
+
+{% block custom_js %}
+{% endblock custom_js %}
+{% block content %}
+    <div class="container">
+        <div class="toast align-items-center text-white bg-success border-0 send-success" role="alert"
+             aria-live="assertive" aria-atomic="true">
+            <div class="d-flex">
+                <div class="toast-body send-success-body">
+                    发送成功!
+                </div>
+                <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast"
+                        aria-label="Close"></button>
+            </div>
+        </div>
+        <div class="toast align-items-center text-white bg-danger border-0 send-fail" role="alert"
+             aria-live="assertive" aria-atomic="true">
+            <div class="d-flex">
+                <div class="toast-body send-fail-body">
+                    发送失败!
+                </div>
+                <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast"
+                        aria-label="Close"></button>
+            </div>
+        </div>
+        <div class="mb-3 mt-3">
+            <label for="email" class="form-label">邮箱:</label>
+            <div class="row">
+                <div class="col-email">
+                    <input type="email" class="form-control" id="email" placeholder="Enter email"
+                           name="email">
+                </div>
+                <div class="col">
+                    <input type="button" class="btn btn-secondary" id="get-email-code" value="获取认证码">
+                </div>
+            </div>
+
+
+        </div>
+        <div class="mb-3">
+            <label for="email-code" class="form-label">邮箱认证码:</label>
+            <input type="text" class="form-control" id="email-code" placeholder="Enter password"
+                   name="pswd">
+        </div>
+        <input type="button" class="btn btn-primary" id="login" value="登录">
+    </div>
+
+{% endblock content %}

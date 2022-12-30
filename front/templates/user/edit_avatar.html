@@ -1,0 +1,66 @@
+{% extends 'user/base_user_center.html' %}
+
+{% block title %}用户中心 - {{ title }}{% endblock title %}
+
+{% block custom_css %}
+    {{ block.super }}
+    <link rel="stylesheet" href="/static/css/cropper.css">
+{% endblock custom_css %}
+
+
+{% block content %}
+    {{ block.super }}
+{% endblock content %}
+
+{% block main_user_center %}
+
+    <div class="home">
+        <div class="toast align-items-center text-white bg-success border-0 edit-success" role="alert"
+             aria-live="assertive" aria-atomic="true">
+            <div class="d-flex">
+                <div class="toast-body edit-success-body">
+                    修改成功!
+                </div>
+                <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast"
+                        aria-label="Close"></button>
+            </div>
+        </div>
+        <div class="toast align-items-center text-white bg-danger border-0 edit-fail" role="alert"
+             aria-live="assertive" aria-atomic="true">
+            <div class="d-flex">
+                <div class="toast-body edit-fail-body">
+                </div>
+                <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast"
+                        aria-label="Close"></button>
+            </div>
+        </div>
+        <p>图片限制尺寸最大512x512 格式为jpg, png</p>
+        <br>
+        <p>原头像:</p>
+        <img src="{{ user.avatar.url }}" alt="Avatar" width="120" height="120">
+        <br><br>
+        <button type="button" class="btn btn-primary" onclick="update_file()">选择文件</button>
+        <button type="button" class="btn btn-primary" onclick="update_avatar()" id="update-avatar">上传头像</button>
+        <input
+                type="file"
+                accept="image/*"
+                id="img-reader"
+                onchange="loadingImg()"
+                style="display: none;"
+        >
+
+        <!-- 2.一个用于给Cropper.js覆盖使用的img  -->
+        <img id="crop-img" alt="Img" src="https://laosun-video.obs.cn-north-4.myhuaweicloud.com/avatar/empty.png">
+        <div class="preview-box"></div>
+        <div class="preview-box-round"></div>
+        <br>
+
+    </div>
+
+{% endblock main_user_center %}
+{% block custom_js %}
+    {{ block.super }}
+    <script src="/static/js/edit_avatar.js"></script>
+    <script src="/static/js/cropper.js"></script>
+    <script src="/static/js/jquery-cropper.js"></script>
+{% endblock custom_js %}

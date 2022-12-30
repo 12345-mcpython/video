@@ -50,8 +50,8 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    "front",
-    'login',
+    'front',
+    'user',
 ]
 
 MIDDLEWARE = [
@@ -157,6 +157,8 @@ STATIC_URL = 'static/'
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 # Email
 
+DEFAULT_FILE_STORAGE = "video.avatar_storage.AvatarStorage"
+
 EMAIL_HOST = config['email'].get("email_host", "smtp.qq.com")
 
 EMAIL_PORT = config['email'].get("email_port", 465)
@@ -168,3 +170,15 @@ EMAIL_HOST_PASSWORD = config['email'].get("email_host_password")
 EMAIL_USE_SSL = config['email'].get("email_use_ssl", False)
 
 EMAIL_USE_TLS = config['email'].get("email_use_tls", False)
+
+STORAGE_TYPE = config['storage'].get("type", "")
+
+OSS_ACCESS_KEY = config['storage'].get("ak", "")
+
+OSS_SECRET_KEY = config['storage'].get("sk", "")
+
+OSS_BUCKET = config['storage'].get("bucket", "")
+
+OSS_ENDPOINT = config['storage'].get("endpoint", "")
+
+PORN_VERIFY = config['index'].get("porn_verify_server", "http://127.0.0.1:8866")
