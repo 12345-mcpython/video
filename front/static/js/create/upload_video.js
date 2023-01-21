@@ -11,9 +11,31 @@ function get_extension(name) {
 
 function get_video() {
     $("#video-info").show()
+    const video_shower = $("#video-shower")
+    const file = document.getElementById("choose-video").files[0]
+    let binaryData = [];
+    binaryData.push(file);
+    const url = URL.createObjectURL(new Blob(binaryData))
+    video_shower.show()
+    if (get_extension(file.name).toLowerCase() === ".flv") {
+        if(!flvjs.isSupported()){
+            alert("浏览器不支持flv.js, 请更换浏览器")
+            return
+        }
+        const flvPlayer = flvjs.createPlayer({
+            type: 'flv',
+            url: url
+        });
+        flvPlayer.attachMediaElement(video_shower)
+        flvPlayer.load()
+        flvPlayer.play()
+        return
+    }
+    video_shower.attr("src", url)
 }
 
-function choose_cover(){
+
+function choose_cover() {
     $("#cover").click()
 }
 
@@ -39,7 +61,7 @@ function loading_cover() {
             img.onload = function () {
                 const width = img.width
                 const height = img.height
-                if(width / height !== 16/9){
+                if (width / height !== 16 / 9) {
                     alert("图片宽高错误!")
                     document.querySelector('#img-cover').src = "https://laosun-video.obs.cn-north-4.myhuaweicloud.com/avatar/empty.png"
                     $('#img-cover').hide()

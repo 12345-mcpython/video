@@ -7,22 +7,22 @@
     <link rel="stylesheet" href="/static/css/bootstrap-tagsinput.css">
     <link rel="stylesheet" href="/static/css/bootstrap-tagsinput-typeahead.css">
     <style>
-        .icon-github {
-            width: 16px;
-            height: 16px;
-        }
-
-        .bootstrap-tagsinput {
-            width: 100%;
-        }
-
-        .accordion {
-            margin-bottom: -3px;
-        }
-
-        .accordion-group {
-            border: none;
-        }
+        {#.icon-github {#}
+        {#    width: 16px;#}
+        {#    height: 16px;#}
+        {# }#}
+        {##}
+        {#.bootstrap-tagsinput {#}
+        {#    width: 100%;#}
+        {# } #}
+        {##}
+        {#.accordion {#}
+        {#    margin-bottom: -3px;#}
+        {# } #}
+        {##}
+        {#.accordion-group {#}
+        {#    border: none;#}
+        {# } #}
 
         .twitter-typeahead .tt-query,
         .twitter-typeahead .tt-hint {
@@ -54,24 +54,24 @@
             background-clip: padding-box;
             cursor: pointer;
         }
-
-        .tt-suggestion {
-            display: block;
-            padding: 3px 20px;
-            clear: both;
-            font-weight: normal;
-            line-height: 1.428571429;
-            color: #333333;
-            white-space: nowrap;
-        }
-
-        .tt-suggestion:hover,
-        .tt-suggestion:focus {
-            color: #ffffff;
-            text-decoration: none;
-            outline: 0;
-            background-color: #428bca;
-        }
+        {##}
+        {#.tt-suggestion {#}
+        {#    display: block;#}
+        {#    padding: 3px 20px;#}
+        {#    clear: both;#}
+        {#    font-weight: normal;#}
+        {#    line-height: 1.428571429;#}
+        {#    color: #333333;#}
+        {#    white-space: nowrap;#}
+        {# } #}
+        {##}
+        {#.tt-suggestion:hover,#}
+        {#.tt-suggestion:focus {#}
+        {#    color: #ffffff;#}
+        {#    text-decoration: none;#}
+        {#    outline: 0;#}
+        {#    background-color: #428bca;#}
+        {# } #}
 
     </style>
 {% endblock custom_css %}
@@ -82,7 +82,8 @@
 
 {% block main_create_center %}
     <div class="home">
-
+        <video style="display: none" id="video-shower" autoplay controls width="640" height="360"></video>
+        <br>
         <button type="button" class="btn btn-primary" onclick="choose_video()">选择视频</button>
         <input type="file" style="display: none" id="choose-video" accept=".mp4, .flv" onchange="get_video()">
         <br><br>
@@ -118,6 +119,7 @@
     <script src="/static/js/create/bootstrap-tagsinput.js"></script>
     <script src="/static/js/create/upload_video.js"></script>
     <script src="/static/js/typeahead.bundle.js"></script>
+
     <script>
         /*
             var citynames = new Bloodhound({
@@ -143,4 +145,5 @@
                 }
             });*/
     </script>
+    <script src="/static/js/create/flv.min.js"></script>
 {% endblock custom_js %}
