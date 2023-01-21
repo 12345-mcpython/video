@@ -6,5 +6,3 @@ sqlparse
 PyMySQL
 celery
 eventlet
-paddlepaddle
-paddlehub
