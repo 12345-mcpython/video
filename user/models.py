@@ -44,6 +44,7 @@ class Video(models.Model):
     share = models.IntegerField(default=0)
     danmaku = models.IntegerField(default=0)
     author = models.ForeignKey(to=User, on_delete=models.DO_NOTHING)
+    examine = models.IntegerField(default=0)
     # 视频长度
     length = models.IntegerField(default=0)
     tags = TaggableManager()

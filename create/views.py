@@ -14,7 +14,7 @@ def upload_video(request: HttpRequest):
         if not session:
             return JsonResponse({"code": 10006, "msg": "账号未登录!", "data": {}})
         video = Video()
-        return JsonResponse({"code": 0, "msg": "上传成功, 等待投稿", "data": {}})
+        return JsonResponse({"code": 0, "msg": "上传成功, 等待审核", "data": {}})
     else:
         response = JsonResponse(
             {"code": 405, "msg": "Method not allowed", "data": {}})
