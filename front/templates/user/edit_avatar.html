@@ -1,4 +1,4 @@
-{% extends 'user/base_user_center.html' %}
+{% extends 'user/base.html' %}
 
 {% block title %}用户中心 - {{ title }}{% endblock title %}
 
@@ -60,7 +60,7 @@
 {% endblock main_user_center %}
 {% block custom_js %}
     {{ block.super }}
-    <script src="/static/js/edit_avatar.js"></script>
-    <script src="/static/js/cropper.js"></script>
-    <script src="/static/js/jquery-cropper.js"></script>
+    <script src="/static/js/user/edit_avatar.js"></script>
+    <script src="/static/js/user/avatar/cropper.js"></script>
+    <script src="/static/js/user/avatar/jquery-cropper.js"></script>
 {% endblock custom_js %}

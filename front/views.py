@@ -40,3 +40,19 @@ def login(request):
     if user:
         return redirect("/")
     return render(request, "login.html", locals())
+
+
+def create(request):
+    title = settings.TITLE
+    user = request.session.get("user")
+    if not user:
+        return redirect("/login/")
+    return render(request, "create/create.html", locals())
+
+
+def upload_video(request):
+    title = settings.TITLE
+    user = request.session.get("user")
+    if not user:
+        return redirect("/login/")
+    return render(request, "create/upload_video.html", locals())

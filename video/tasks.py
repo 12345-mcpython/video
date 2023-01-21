@@ -36,6 +36,8 @@ def send_email(code, email):
 
 @app.task
 def verify_text(text):
+    if not settings.PORN_VERIFY:
+        return False
     data = {"texts": [text], "batch_size": 1, "use_gpu": False}
     headers = {"Content-Type": "application/json"}
     url = settings.PORN_VERIFY + "/predict/porn_detection_lstm"

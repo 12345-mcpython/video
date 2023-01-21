@@ -4,12 +4,12 @@ import time
 import uuid
 
 import requests
-from PIL import Image, UnidentifiedImageError
 from django.conf import settings
 from django.core.cache import cache
 from django.core.files.uploadedfile import InMemoryUploadedFile
 from django.http import HttpRequest, JsonResponse
 from django.views.decorators.csrf import csrf_exempt
+from PIL import Image, UnidentifiedImageError
 
 from video import tasks
 

@@ -52,6 +52,9 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'front',
     'user',
+    # django-taggit
+    'taggit',
+    'create'
 ]
 
 MIDDLEWARE = [
@@ -181,4 +184,4 @@ OSS_BUCKET = config['storage'].get("bucket", "")
 
 OSS_ENDPOINT = config['storage'].get("endpoint", "")
 
-PORN_VERIFY = config['index'].get("porn_verify_server", "http://127.0.0.1:8866")
+PORN_VERIFY = config['index'].get("porn_verify_server", None)

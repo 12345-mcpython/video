@@ -1,6 +1,6 @@
-{% extends 'user/base.html' %}
+{% extends 'create/base.html' %}
 
-{% block title %}用户中心 - {{ title }}{% endblock title %}
+{% block title %}创作中心 - {{ title }}{% endblock title %}
 
 {% block custom_css %}
     {{ block.super }}
@@ -13,11 +13,11 @@
     {{ block.super }}
 {% endblock content %}
 
-{% block main_user_center %}
+{% block main_create_center %}
     <div class="home">
         <p>头像: </p>
         <img src="{{ user.avatar.url }}" alt="Avatar" width="180" height="180">
         <br><br><br>
         <p>用户名: {{ user.name }}</p>
     </div>
-{% endblock main_user_center %}
+{% endblock main_create_center %}
