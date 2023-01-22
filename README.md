@@ -16,8 +16,6 @@
 
 ## 部署
 
-这里使用的是华为云的服务(对象管理和媒体处理) pip包为 `huaweicloudsdkmpc` <br>如果有业务需要也可以使用别的云服务商的服务.
-
 1. 确保你的python版本是3.8以上
 2. 安装依赖 `pip install -r requirements.txt`
 3. 按照config.example.json配置OSS, MySQL和Redis, 保存为config.json
@@ -27,6 +25,6 @@
 
 ## 备注
 
-界面设计极其~~高端~~垃圾, 如果有好心人帮我修改可以发一下PR.
+界面设计极其 ~~高端~~ 垃圾, 如果有好心人帮我修改可以发一下PR.
 
-如果有安全漏洞请发email: m15043340061@163.com 万分感谢
+如果有安全漏洞请发email: m15043340061@163.com
