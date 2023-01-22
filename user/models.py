@@ -58,6 +58,7 @@ class Video(models.Model):
 class VideoPage(models.Model):
     page_title = models.CharField(max_length=15)
     video = models.ForeignKey(to=Video, on_delete=models.DO_NOTHING)
+    video_file = models.FileField(upload_to="temp/wait")
 
     class Meta:
         ordering = ["-id"]

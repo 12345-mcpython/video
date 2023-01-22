@@ -160,7 +160,7 @@ STATIC_URL = 'static/'
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 # Email
 
-DEFAULT_FILE_STORAGE = "video.avatar_storage.AvatarStorage"
+DEFAULT_FILE_STORAGE = "video.storage.AvatarStorage"
 
 EMAIL_HOST = config['email'].get("email_host", "smtp.qq.com")
 
@@ -185,3 +185,13 @@ OSS_BUCKET = config['storage'].get("bucket", "")
 OSS_ENDPOINT = config['storage'].get("endpoint", "")
 
 PORN_VERIFY = config['index'].get("porn_verify_server", None)
+
+CONVERT_ENDPOINT = config['convert'].get("endpoint")
+
+CONVERT_ACCESS_KEY = config['convert'].get("ak")
+
+CONVERT_SECERT_KEY = config['convert'].get("sk")
+
+CONVERT_PROJECT_ID = config['convert'].get("project_id")
+
+CONVERT_USE_BUCKET = config['convert'].get("use_bucket")

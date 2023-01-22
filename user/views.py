@@ -3,7 +3,6 @@ import re
 import time
 import uuid
 
-import requests
 from django.conf import settings
 from django.core.cache import cache
 from django.core.files.uploadedfile import InMemoryUploadedFile
@@ -181,7 +180,6 @@ def edit_avatar(request):
             return JsonResponse({"code": 10009, "msg": "图片格式错误!", "data": {}})
         icon.seek(0)
         icon.name += ("." + image.format.lower())
-        # icon = BytesIO(image.tobytes())
         if image.format.lower() not in ["png", "jpeg"]:
             return JsonResponse({"code": 10009, "msg": "图片格式错误!", "data": {}})
         width, height = image.size

@@ -4,34 +4,51 @@ function choose_video() {
 
 const file_type = ['.jpg', '.png', '.jpeg']
 
+let dplayer = null
+
+let played = false
+
 function get_extension(name) {
     return name.substring(name.lastIndexOf("."))
+}
+
+//获取uuid文件名称（去掉扩展名）
+function get_filename(data) {
+    return data.substring(0, data.indexOf("."));
 }
 
 
 function get_video() {
     $("#video-info").show()
+    $("#play-video-button").show()
     const video_shower = $("#video-shower")
     const file = document.getElementById("choose-video").files[0]
     let binaryData = [];
     binaryData.push(file);
     const url = URL.createObjectURL(new Blob(binaryData))
-    video_shower.show()
+    let type = "mp4";
     if (get_extension(file.name).toLowerCase() === ".flv") {
-        if(!flvjs.isSupported()){
-            alert("浏览器不支持flv.js, 请更换浏览器")
-            return
-        }
-        const flvPlayer = flvjs.createPlayer({
-            type: 'flv',
-            url: url
-        });
-        flvPlayer.attachMediaElement(video_shower)
-        flvPlayer.load()
-        flvPlayer.play()
-        return
+        type = "flv"
     }
-    video_shower.attr("src", url)
+    dplayer = new DPlayer({
+        container: document.getElementById('dplayer'),
+        video: {
+            "url": url,
+            "type": type
+        }
+    })
+    const videoElement = $(".dplayer-video")[0]
+    videoElement.addEventListener("canplay", function () {
+        const width = videoElement.videoWidth;
+        const height = videoElement.videoHeight;
+        if (width / height !== 16 / 9) {
+            console.log(width, height, width / height)
+            alert("视频宽高错误!")
+            location.reload()
+        }
+    })
+
+    $("#video-title").val(get_filename(file.name))
 }
 
 
@@ -72,3 +89,19 @@ function loading_cover() {
     }
 }
 
+function generate_first_frame() {
+    const videoElement = $(".dplayer-video")[0]
+    const img_cover = $("#img-cover")
+    videoElement.addEventListener("canplay", function () {
+        let canvas = document.createElement("canvas");
+        canvas.width = videoElement.videoWidth;
+        canvas.height = videoElement.videoHeight;
+        canvas.getContext("2d").drawImage(videoElement, 0, 0, canvas.width, canvas.height);
+        img_cover.attr("src", canvas.toDataURL("image/png"))
+        img_cover.show()
+    })
+}
+
+function publish_video(){
+
+}

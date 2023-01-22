@@ -54,6 +54,7 @@
             background-clip: padding-box;
             cursor: pointer;
         }
+
         {##}
         {#.tt-suggestion {#}
         {#    display: block;#}
@@ -81,36 +82,63 @@
 {% endblock content %}
 
 {% block main_create_center %}
+    <div class="modal fade" id="video-play-modal">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+
+                <div class="modal-header">
+                    <h4 class="modal-title">视频播放</h4>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" onclick="dplayer.pause()"></button>
+                </div>
+
+                <div class="modal-body">
+                    <div id="dplayer"></div>
+                </div>
+
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-danger" data-bs-dismiss="modal" onclick="dplayer.pause()">
+                        关闭
+                    </button>
+                </div>
+
+            </div>
+        </div>
+    </div>
     <div class="home">
-        <video style="display: none" id="video-shower" autoplay controls width="640" height="360"></video>
-        <br>
+        <p>视频要求宽高比例为16:9, 格式为mp4, mkv, flv</p>
         <button type="button" class="btn btn-primary" onclick="choose_video()">选择视频</button>
-        <input type="file" style="display: none" id="choose-video" accept=".mp4, .flv" onchange="get_video()">
+        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#video-play-modal"
+                onclick="dplayer.play()" id="play-video-button" style="display: none;">播放视频
+        </button>
+        <input type="file" style="display: none" id="choose-video" accept=".mp4, .mkv , .flv"
+               onchange="get_video();generate_first_frame()">
         <br><br>
         <div id="video-info" style="display: none">
             <div class="mb-3">
-                <label for="text" class="form-label">标题:</label>
-                <input type="text" class="form-control" id="text" placeholder="Enter title" name="email">
+                <label for="video-title" class="form-label">标题:</label>
+                <input type="text" class="form-control" id="video-title" placeholder="Enter title" name="email">
             </div>
             <div class="mb-3">
-                <label for="tag" class="form-label">标签:</label>
-                <input type="text" class="form-control" id="tag" placeholder="" name="tag"
+                <label for="video-tag" class="form-label">标签:</label>
+                <input type="text" class="form-control" id="video-tag" placeholder="" name="tag"
                        data-role="tagsinput">
             </div>
             <div class="mb-3">
-                <label for="description">简介:</label>
-                <textarea class="form-control" rows="5" id="description" name="text"
+                <label for="video-description">简介:</label>
+                <textarea class="form-control" rows="5" id="video-description" name="text"
                           placeholder="Enter description"></textarea>
             </div>
             <div class="mb-3">
                 <label for="cover">封面:</label>
-                <p>封面要求宽高比例为16:9 最大为1920x1080 格式为jpg png</p>
+                <p>封面要求宽高比例为16:9, 可以通过拖动进度条选择封面</p>
                 <button type="button" class="btn btn-primary" onclick="choose_cover()">选择封面</button>
                 <input type="file" id="cover" style="display: none" onchange="loading_cover()"
                        accept=".jpg, .png, .jpeg">
-                <img src="https://laosun-video.obs.cn-north-4.myhuaweicloud.com/avatar/empty.png" style="display: none;width: 480px;height: 270px" id="img-cover" alt="">
+                <br>
+                <img src="https://laosun-video.obs.cn-north-4.myhuaweicloud.com/avatar/empty.png"
+                     style="display: none;width: 480px;height: 270px" id="img-cover" alt="">
             </div>
-            <button type="submit" class="btn btn-primary">投稿</button>
+            <button type="submit" class="btn btn-primary" id="publish-video">投稿</button>
         </div>
     </div>
 {% endblock main_create_center %}
@@ -146,4 +174,5 @@
             });*/
     </script>
     <script src="/static/js/create/flv.min.js"></script>
+    <script src="/static/js/DPlayer.min.js"></script>
 {% endblock custom_js %}

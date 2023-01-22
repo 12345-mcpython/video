@@ -32,7 +32,6 @@ class AvatarStorage(Storage):
                 secret_access_key=self.sk,
                 server=self.endpoint)
             self.file_list = None
-            self.start = "avatar/"
 
     def _open(self, name, mode='rb'):
         if mode != "rb":
@@ -54,7 +53,6 @@ class AvatarStorage(Storage):
     def _save(self, name, content):
         name = self.start + hashlib.md5((str(int(time.time())) + name).encode()).hexdigest() + os.path.splitext(name)[1]
         resp = self.client.putContent(self.bucket, name, content=content)
-        self.set_public_ACL(name)
         self.reset_file_list()
         if resp.status > 300:
             print("_save error")
