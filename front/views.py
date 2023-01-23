@@ -23,14 +23,14 @@ def dark_room(request: HttpRequest):
     title = settings.TITLE
     user = request.session.get("user")
     date = datetime.datetime(year=2023, month=1, day=23)
-    return render(request, "agreement/use_agreement.html", locals())
+    return render(request, "agreement/dark_room.html", locals())
 
 
 def creative_convention(request: HttpRequest):
     title = settings.TITLE
     user = request.session.get("user")
     date = datetime.datetime(year=2023, month=1, day=23)
-    return render(request, "agreement/use_agreement.html", locals())
+    return render(request, "agreement/creative_convention.html", locals())
 
 
 def user_center(request: HttpRequest):
