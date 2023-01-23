@@ -38,7 +38,7 @@ class Video(models.Model):
     title = models.CharField(max_length=30)
     publish_date = models.DateTimeField(auto_now_add=True)
     description = models.TextField(max_length=300, default="", blank=True)
-    cover = models.ImageField(upload_to='cover', default="cover/default.png")
+    cover = models.ImageField(upload_to='cover/', default="cover/default.png")
     view = models.IntegerField(default=0)
     like = models.IntegerField(default=0)
     share = models.IntegerField(default=0)
@@ -56,9 +56,9 @@ class Video(models.Model):
 
 
 class VideoPage(models.Model):
-    page_title = models.CharField(max_length=15)
+    page_title = models.CharField(max_length=30)
     video = models.ForeignKey(to=Video, on_delete=models.DO_NOTHING)
-    video_file = models.FileField(upload_to="temp/wait")
+    video_file = models.FileField(upload_to="temp/wait/")
 
     class Meta:
         ordering = ["-id"]

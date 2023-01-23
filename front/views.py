@@ -1,3 +1,5 @@
+import datetime
+
 from django.http import HttpRequest
 from django.shortcuts import render, redirect
 from django.conf import settings
@@ -8,6 +10,27 @@ def index(request: HttpRequest):
     title = settings.TITLE
     user = request.session.get("user")
     return render(request, "index.html", locals())
+
+
+def use_agreement(request: HttpRequest):
+    title = settings.TITLE
+    user = request.session.get("user")
+    date = datetime.datetime(year=2023, month=1, day=23)
+    return render(request, "agreement/use_agreement.html", locals())
+
+
+def dark_room(request: HttpRequest):
+    title = settings.TITLE
+    user = request.session.get("user")
+    date = datetime.datetime(year=2023, month=1, day=23)
+    return render(request, "agreement/use_agreement.html", locals())
+
+
+def creative_convention(request: HttpRequest):
+    title = settings.TITLE
+    user = request.session.get("user")
+    date = datetime.datetime(year=2023, month=1, day=23)
+    return render(request, "agreement/use_agreement.html", locals())
 
 
 def user_center(request: HttpRequest):

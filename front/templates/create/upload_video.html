@@ -105,7 +105,29 @@
         </div>
     </div>
     <div class="home">
-        <p>视频要求宽高比例为16:9, 格式为mp4, mkv, flv</p>
+        <div class="toast align-items-center text-white bg-success border-0 publish-success" role="alert"
+             aria-live="assertive" aria-atomic="true">
+            <div class="d-flex">
+                <div class="toast-body edit-success-body">
+                    投稿成功! 正在等待审核
+                </div>
+                <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast"
+                        aria-label="Close"></button>
+            </div>
+        </div>
+        <div class="toast align-items-center text-white bg-danger border-0 publish-fail" role="alert"
+             aria-live="assertive" aria-atomic="true">
+            <div class="d-flex">
+                <div class="toast-body publish-fail-body">
+                </div>
+                <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast"
+                        aria-label="Close"></button>
+            </div>
+        </div>
+        <div class="progress" style="display: none;">
+            <div class="progress-bar" style="width:0%"></div>
+        </div>
+        <p>选择视频, 即表示您已同意 《{{ title }}创作公约》 与 《{{ title }}使用协议》 </p>
         <button type="button" class="btn btn-primary" onclick="choose_video()">选择视频</button>
         <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#video-play-modal"
                 onclick="dplayer.play()" id="play-video-button" style="display: none;">播放视频
@@ -132,13 +154,13 @@
                 <label for="cover">封面:</label>
                 <p>封面要求宽高比例为16:9, 可以通过拖动进度条选择封面</p>
                 <button type="button" class="btn btn-primary" onclick="choose_cover()">选择封面</button>
-                <input type="file" id="cover" style="display: none" onchange="loading_cover()"
+                <input type="file" id="cover-file" style="display: none" onchange="loading_cover()"
                        accept=".jpg, .png, .jpeg">
                 <br>
                 <img src="https://laosun-video.obs.cn-north-4.myhuaweicloud.com/avatar/empty.png"
                      style="display: none;width: 480px;height: 270px" id="img-cover" alt="">
             </div>
-            <button type="submit" class="btn btn-primary" id="publish-video">投稿</button>
+            <button type="submit" class="btn btn-primary" id="publish-video" onclick="publish_video()">投稿</button>
         </div>
     </div>
 {% endblock main_create_center %}
@@ -147,7 +169,6 @@
     <script src="/static/js/create/bootstrap-tagsinput.js"></script>
     <script src="/static/js/create/upload_video.js"></script>
     <script src="/static/js/typeahead.bundle.js"></script>
-
     <script>
         /*
             var citynames = new Bloodhound({

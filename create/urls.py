@@ -15,6 +15,8 @@ Including another URLconf
 """
 from django.urls import path
 
+from . import views
+
 urlpatterns = [
-    path('', ),
+    path('publish_video', views.publish_video),
 ]

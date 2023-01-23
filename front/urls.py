@@ -25,5 +25,6 @@ urlpatterns = [
     path("create/upload/video/", views.upload_video),
     path("user_center/", views.user_center),
     path("user_center/edit_information/", views.edit_information),
-    path("user_center/edit_avatar/", views.edit_avatar)
+    path("user_center/edit_avatar/", views.edit_avatar),
+    path("use_agreement/", views.use_agreement)
 ]

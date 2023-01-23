@@ -140,7 +140,6 @@ def edit_information(request):
         if username:
             verify_username = tasks.verify_text.delay(username)
             is_yellow = verify_username.get()
-            print(is_yellow)
             if is_yellow:
                 return JsonResponse({"code": 10010, "msg": "用户名含有黄色内容!", "data": {}})
             if len(username) >= 16:
@@ -149,7 +148,6 @@ def edit_information(request):
         if description:
             verify_description = tasks.verify_text.delay(description)
             is_yellow = verify_description.get()
-            print(is_yellow)
             if is_yellow:
                 return JsonResponse({"code": 10010, "msg": "个性签名含有黄色内容!", "data": {}})
             if len(description) >= 500:

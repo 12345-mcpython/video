@@ -51,7 +51,8 @@ class AvatarStorage(Storage):
             print('errorMessage:', resp.errorMessage)
 
     def _save(self, name, content):
-        name = self.start + hashlib.md5((str(int(time.time())) + name).encode()).hexdigest() + os.path.splitext(name)[1]
+        start = os.path.split(name)[0]
+        name = start + "/" + hashlib.md5((str(int(time.time())) + name).encode()).hexdigest() + os.path.splitext(os.path.split(name)[1])[1]
         resp = self.client.putContent(self.bucket, name, content=content)
         self.reset_file_list()
         if resp.status > 300:

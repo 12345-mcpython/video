@@ -8,11 +8,18 @@ let dplayer = null
 
 let played = false
 
+function publish_fail_information(message) {
+    const body = $(".publish-fail-body");
+    body.empty()
+    body.append(message)
+    new bootstrap.Toast(document.querySelector('.publish-fail')).show()
+}
+
 function get_extension(name) {
     return name.substring(name.lastIndexOf("."))
 }
 
-//获取uuid文件名称（去掉扩展名）
+
 function get_filename(data) {
     return data.substring(0, data.indexOf("."));
 }
@@ -21,7 +28,6 @@ function get_filename(data) {
 function get_video() {
     $("#video-info").show()
     $("#play-video-button").show()
-    const video_shower = $("#video-shower")
     const file = document.getElementById("choose-video").files[0]
     let binaryData = [];
     binaryData.push(file);
@@ -53,7 +59,7 @@ function get_video() {
 
 
 function choose_cover() {
-    $("#cover").click()
+    $("#cover-file").click()
 }
 
 function loading_cover() {
@@ -62,14 +68,14 @@ function loading_cover() {
         reader.readAsDataURL(event.target.files[0]);
         if (!file_type.includes(get_extension(event.target.files[0].name).toLowerCase())) {
             alert("文件格式错误!")
-            $('#cover').val("")
+            $('#cover-file').val("")
             return
         }
         reader.onload = () => {
             document.querySelector('#img-cover').src = reader.result;
             $('#img-cover').on("error", function () {
                 alert("图片加载失败")
-                $('#cover').val("")
+                $('#cover-file').val("")
                 document.querySelector('#img-cover').src = "https://laosun-video.obs.cn-north-4.myhuaweicloud.com/avatar/empty.png"
                 $('#img-cover').hide()
             })
@@ -102,6 +108,70 @@ function generate_first_frame() {
     })
 }
 
-function publish_video(){
 
+function data_to_blob(data_url) {
+    let arr = data_url.split(','),
+        mime = arr[0].match(/:(.*?);/)[1],
+        bstr = atob(arr[1]),
+        n = bstr.length,
+        u8arr = new Uint8Array(n)
+    while (n--) {
+        u8arr[n] = bstr.charCodeAt(n)
+    }
+    return new Blob([u8arr], {type: mime})
+}
+
+function publish_video() {
+    const title = $("#video-title").val()
+    const description = $("#video-description").val()
+    const tag = $("#video-tag").val()
+    if (title === "" || description === "" || tag === "") {
+        alert("请完善信息!")
+    }
+    const file = document.getElementById("choose-video").files[0]
+    let video_content = [];
+    video_content.push(file);
+    const video_blob = new Blob(video_content)
+    const cover_blob = data_to_blob($("#img-cover").attr("src"))
+    const form_data = new FormData();
+    form_data.append("files", video_blob)
+    form_data.append("cover", cover_blob)
+    form_data.append("title", title)
+    form_data.append("description", description)
+    form_data.append("tags", tag)
+    $('.progress').show()
+    $.ajax({
+        url: "/api/v1/create/publish_video",
+        type: "POST",
+        data: form_data,
+        contentType: false,
+        processData: false,
+        success: function (data) {
+            if (data['code'] === 0) {
+                new bootstrap.Toast(document.querySelector('.publish-success')).show()
+                setTimeout(function () {
+                    location.reload()
+                }, 1500)
+            } else {
+                publish_fail_information(data['msg'])
+            }
+        },
+        error: function (data) {
+            console.log(data)
+            publish_fail_information(data['responseText'])
+        },
+        xhr: function () {
+            const xhr = $.ajaxSettings.xhr();
+            if (xhr.upload) {
+                xhr.upload.addEventListener('progress', function (e) {
+                    let progress = (e.loaded / e.total) * 100
+                    if (progress > 100) {
+                        progress = 100
+                    }
+                    $('.progress-bar').css('width', progress + '%')
+                })
+                return xhr;
+            }
+        },
+    })
 }
