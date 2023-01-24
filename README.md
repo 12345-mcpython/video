@@ -14,7 +14,7 @@
 2. 弹幕
 3. 播放
 
-## 部署
+## 运行
 
 1. 确保你的python版本是3.8以上
 2. 安装依赖 `pip install -r requirements.txt`
@@ -22,6 +22,7 @@
 4. 开启宁一个命令行窗口运行celery `celery -A video.tasks worker -l INFO -P eventlet`
 5. (可选,
    用于用户名和个性签名的鉴黄) <br> `hub install porn_detection_lstm==1.1.0` <br> `hub serving start -m porn_detection_lstm`
+6. python manage.py runserver
 
 ## 备注
 
