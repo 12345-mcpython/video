@@ -1,6 +1,6 @@
 # Video
 
-一个类b站开放视频平台, 基于python3+django+redis+mysql.
+一个仿b站视频平台, 基于python3+django+redis+mysql.
 
 ## 功能
 
