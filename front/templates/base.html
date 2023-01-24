@@ -124,6 +124,7 @@
                 {% endif %}
             {% endif %}
         </div>
+
     </div>
 </header>
 {% if request.path != "/login/" %}
@@ -186,8 +187,15 @@
             </div>
         </div>
     </div>
+
 {% endif %}
-{% block content %}{% endblock content %}
+{% block content %}
+{% endblock content %}
+<br>
+<div class="container">
+    <p style="text-align: center; color: #999999">footer</p>
+</div>
+<br>
 <script src="/static/js/base.js"></script>
 {% block custom_js %}{% endblock custom_js %}
 

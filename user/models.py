@@ -2,6 +2,65 @@ from django.db import models
 from taggit.managers import TaggableManager
 
 
+class Permission:
+    FOLLOW = 1
+    COMMENT = 2
+    WRITE = 4
+    MODERATE = 8
+    ADMIN = 16
+
+
+class Role(models.Model):
+    id = models.IntegerField(primary_key=True)
+    name = models.CharField(max_length=64, unique=True)
+    default = models.BooleanField(default=False, db_index=True)
+    permissions = models.IntegerField()
+    users = models.ForeignKey(to="User", on_delete=models.CASCADE)
+
+    def __init__(self, **kwargs):
+        super(Role, self).__init__(**kwargs)
+        if self.permissions is None:
+            self.permissions = 0
+
+    @staticmethod
+    def insert_roles():
+        roles = {
+            'User': [Permission.FOLLOW, Permission.COMMENT, Permission.WRITE],
+            'Moderator': [Permission.FOLLOW, Permission.COMMENT,
+                          Permission.WRITE, Permission.MODERATE],
+            'Administrator': [Permission.FOLLOW, Permission.COMMENT,
+                              Permission.WRITE, Permission.MODERATE,
+                              Permission.ADMIN],
+        }
+        default_role = 'User'
+        for r in roles:
+            role = Role.objects.filter(name=r).first()
+            if role is None:
+                role = Role(name=r)
+            role.reset_permissions()
+            for perm in roles[r]:
+                role.add_permission(perm)
+            role.default = (role.name == default_role)
+            role.save()
+
+    def add_permission(self, perm):
+        if not self.has_permission(perm):
+            self.permissions += perm
+
+    def remove_permission(self, perm):
+        if self.has_permission(perm):
+            self.permissions -= perm
+
+    def reset_permissions(self):
+        self.permissions = 0
+
+    def has_permission(self, perm):
+        return self.permissions & perm == perm
+
+    def __repr__(self):
+        return '<Role %r>' % self.name
+
+
 def get_list():
     return []
 
@@ -19,6 +78,13 @@ class User(models.Model):
     register_time = models.DateTimeField(auto_now_add=True)
     video_like_list = models.JSONField(default=get_list)
     comment_like_list = models.JSONField(default=get_list)
+    roles = models.ForeignKey('Role', to_field="id", on_delete=models.CASCADE)
+
+    def can(self, perm):
+        return self.roles is not None and self.roles.has_permission(perm)
+
+    def is_administrator(self):
+        return self.can(Permission.ADMIN)
 
     def __str__(self):
         return self.name

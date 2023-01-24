@@ -175,3 +175,26 @@ function publish_video() {
         },
     })
 }
+
+function get_examine_speed(){
+    $.ajax({
+        url: "/api/v1/create/get_examine_speed",
+        type: "GET",
+        contentType: false,
+        processData: false,
+        success: function (data) {
+            if (data['code'] === 0) {
+                $(".examine-list").html("当前审核队列<span class='tag label label-info'>" + data['msg'] + "</span>, 总共审核队列数为" + data['data']['total'])
+            } else {
+                publish_fail_information(data['msg'])
+            }
+        },
+        error: function (data) {
+            console.log(data)
+            publish_fail_information(data['responseText'])
+        },
+    })
+}
+$("html").ready(function (){
+    get_examine_speed()
+})

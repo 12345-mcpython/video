@@ -26,5 +26,6 @@ urlpatterns = [
     path("user_center/", views.user_center),
     path("user_center/edit_information/", views.edit_information),
     path("user_center/edit_avatar/", views.edit_avatar),
-    path("use_agreement/", views.use_agreement)
+    path("use_agreement/", views.use_agreement),
+    path("creative_convention/", views.creative_convention)
 ]
