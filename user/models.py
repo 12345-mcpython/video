@@ -66,7 +66,7 @@ def get_list():
 
 
 class User(models.Model):
-    name = models.CharField(max_length=16, unique=True)
+    name = models.CharField(max_length=32, unique=True)
     password = models.CharField(max_length=256, null=True, blank=True)
     email = models.EmailField(unique=True)
     # 1 Lv1 2 Lv2 ... max Lv10
@@ -124,7 +124,7 @@ class Video(models.Model):
 class VideoPage(models.Model):
     page_title = models.CharField(max_length=30)
     video = models.ForeignKey(to=Video, on_delete=models.DO_NOTHING)
-    video_file = models.FileField(upload_to="temp/wait/")
+    video_file = models.CharField(max_length=100)
 
     class Meta:
         ordering = ["-id"]
@@ -164,3 +164,8 @@ class ExamineList(models.Model):
     video = models.ForeignKey(to=Video, on_delete=models.DO_NOTHING)
     user = models.ForeignKey(to=User, on_delete=models.DO_NOTHING)
     status = models.IntegerField()
+
+
+class TaskList(models.Model):
+    task_id = models.CharField(max_length=100)
+    user = models.ForeignKey(to=User, on_delete=models.CASCADE)

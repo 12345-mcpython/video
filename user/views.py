@@ -51,15 +51,15 @@ def login(request: HttpRequest):
         if email_code != user_email_code:
             return JsonResponse({"code": 10004, "msg": "邮箱验证码错误!", "data": {}})
         add_new_user = False
-        try:
-            login_user = User.objects.get(email=email)
-        except User.DoesNotExist:
+        login_user = User.objects.filter(email=email)
+        if not login_user:
             login_user = User()
             login_user.name = "用户" + captcha_key
             login_user.email = email
             login_user.save()
             add_new_user = True
         request.session["user"] = login_user
+        print(request.session.has_key("user"))
         cache.delete(email + "_verify")
         return JsonResponse({"code": 0, "msg": "新用户登录成功!" if add_new_user else "老用户登录成功!", "data": {}})
     else:
@@ -106,6 +106,8 @@ def send_code(request: HttpRequest):
 
 def account(request: HttpRequest):
     session: User = request.session.get('user')
+    print(request.session.has_key("user"))
+    print(request.session.get("user"))
     if not session:
         return JsonResponse({"code": 10006, "msg": "账号未登录!", "data": {}})
     return JsonResponse(

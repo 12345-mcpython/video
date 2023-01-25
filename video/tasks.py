@@ -7,11 +7,19 @@ from celery import Celery
 from django.conf import settings
 from django.core.mail import EmailMultiAlternatives
 
+from obs import ObsClient
+from user.models import Video
+
 os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'video.settings')
 
 django.setup()
 
 app = Celery('celery_tasks.tasks', broker='redis://127.0.0.1:6379/0', backend='redis://127.0.0.1:6379/0')
+
+client = ObsClient(
+    access_key_id=settings.OSS_ACCESS_KEY,
+    secret_access_key=settings.OSS_SECRET_KEY,
+    server=settings.OSS_ENDPOINT)
 
 
 @app.task
@@ -46,3 +54,27 @@ def verify_text(text):
         return True
     else:
         return False
+
+
+@app.task()
+def upload_video(video, name, video_id):
+    sum_bytes_out = 0
+    times_out = 0
+    video_object = Video.objects.filter(id=video_id).first()
+
+    def upload_state(update_bytes, sum_bytes, times):
+        nonlocal sum_bytes_out
+        nonlocal times_out
+        sum_bytes_out = sum_bytes
+        times_out = times
+        upload_video.update_state(state='PROGRESS', meta={'progress': round(update_bytes / sum_bytes * 100, 2),
+                                                          "update_bytes": update_bytes, "sum_bytes": sum_bytes,
+                                                          "times": times, "video": video_object})
+
+    resp = client.putContent(settings.OSS_BUCKET, name, content=video.read(), progressCallback=upload_state)
+    if resp.status > 300:
+        upload_video.update_state(state='ERROR',
+                                  meta={"error_code": resp.errorCode, "error_message": resp.errorMessage,
+                                        "video": video_object})
+    upload_video.update_state(state='SUCCESSFUL',
+                              meta={"sum_bytes": sum_bytes_out, "time": times_out, "video": video_object})

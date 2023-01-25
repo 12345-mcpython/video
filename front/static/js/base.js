@@ -39,7 +39,7 @@ $('#get-email-code').click(function () {
                 localStorage.setItem("captcha_key", message['data']['captcha_key'])
                 return
             }
-            send_success_body("发送短信认证码失败!" + message['msg'])
+            send_fail_body("发送短信认证码失败!" + message['msg'])
         },
         error: function (message) {
             send_fail_body("发送短信认证码失败! " + message)
