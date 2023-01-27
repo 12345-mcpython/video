@@ -19,5 +19,9 @@ from . import views
 
 urlpatterns = [
     path('publish_video', views.publish_video),
-    path('get_examine_speed', views.get_examine_speed)
+    path('get_examine_speed', views.get_examine_speed),
+    path("get_tasks", views.get_tasks),
+    path("get_video", views.get_video),
+    path("get_examine_list", views.get_examine_list),
+    path("delete_error_tasks", views.delete_error_tasks)
 ]

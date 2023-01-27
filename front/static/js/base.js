@@ -35,14 +35,14 @@ $('#get-email-code').click(function () {
         dataType: "json",
         success: function (message) {
             if (message['code'] === 0) {
-                send_success_body("发送短信认证码成功!")
+                send_success_body("发送认证码成功!")
                 localStorage.setItem("captcha_key", message['data']['captcha_key'])
                 return
             }
-            send_fail_body("发送短信认证码失败!" + message['msg'])
+            send_fail_body("发送认证码失败!" + message['msg'])
         },
         error: function (message) {
-            send_fail_body("发送短信认证码失败! " + message)
+            send_fail_body("发送认证码失败! " + message)
         }
     })
     const interval = setInterval(function () {

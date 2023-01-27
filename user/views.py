@@ -1,6 +1,5 @@
 import random
 import re
-import time
 import uuid
 
 from django.conf import settings
@@ -12,18 +11,7 @@ from PIL import Image, UnidentifiedImageError
 
 from video import tasks
 
-from .models import User
-
-
-def verify_session_key(key: str):
-    if not key:
-        return False
-    email, time_login, secret_key = key.split("|")
-    if int(time_login) + settings.LOGIN_TIME <= time.time():
-        return False
-    elif secret_key != settings.SECRET_KEY:
-        return False
-    return email
+from .models import User, Role
 
 
 def index(request: HttpRequest):
@@ -51,15 +39,15 @@ def login(request: HttpRequest):
         if email_code != user_email_code:
             return JsonResponse({"code": 10004, "msg": "邮箱验证码错误!", "data": {}})
         add_new_user = False
-        login_user = User.objects.filter(email=email)
+        login_user = User.objects.filter(email=email).first()
         if not login_user:
             login_user = User()
-            login_user.name = "用户" + captcha_key
+            login_user.name = "用户" + uuid.uuid4().hex[:16]
             login_user.email = email
+            login_user.roles = Role.objects.get(name="User")
             login_user.save()
             add_new_user = True
         request.session["user"] = login_user
-        print(request.session.has_key("user"))
         cache.delete(email + "_verify")
         return JsonResponse({"code": 0, "msg": "新用户登录成功!" if add_new_user else "老用户登录成功!", "data": {}})
     else:
@@ -106,8 +94,6 @@ def send_code(request: HttpRequest):
 
 def account(request: HttpRequest):
     session: User = request.session.get('user')
-    print(request.session.has_key("user"))
-    print(request.session.get("user"))
     if not session:
         return JsonResponse({"code": 10006, "msg": "账号未登录!", "data": {}})
     return JsonResponse(
@@ -140,18 +126,20 @@ def edit_information(request):
         description = request.POST.get("description")
         session: User = request.session.get('user')
         if username:
-            verify_username = tasks.verify_text.delay(username)
-            is_yellow = verify_username.get()
-            if is_yellow:
-                return JsonResponse({"code": 10010, "msg": "用户名含有黄色内容!", "data": {}})
-            if len(username) >= 16:
-                return JsonResponse({"code": 10007, "msg": "用户名长度不得超过16字符!", "data": {}})
+            if settings.PORN_VERIFY:
+                verify_username = tasks.verify_text.delay(username)
+                is_yellow = verify_username.get()
+                if is_yellow:
+                    return JsonResponse({"code": 10010, "msg": "用户名含有黄色内容!", "data": {}})
+            if len(username) >= 32:
+                return JsonResponse({"code": 10007, "msg": "用户名长度不得超过32字符!", "data": {}})
             session.name = username
         if description:
-            verify_description = tasks.verify_text.delay(description)
-            is_yellow = verify_description.get()
-            if is_yellow:
-                return JsonResponse({"code": 10010, "msg": "个性签名含有黄色内容!", "data": {}})
+            if settings.PORN_VERIFY:
+                verify_description = tasks.verify_text.delay(description)
+                is_yellow = verify_description.get()
+                if is_yellow:
+                    return JsonResponse({"code": 10010, "msg": "个性签名含有黄色内容!", "data": {}})
             if len(description) >= 500:
                 return JsonResponse({"code": 10007, "msg": "个人签名长度不得超过500字符!", "data": {}})
             session.description = description

@@ -1,0 +1,36 @@
+{% extends 'create/base.html' %}
+
+{% block title %}创作中心 - {{ title }}{% endblock title %}
+
+{% block custom_css %}
+    {{ block.super }}
+{% endblock custom_css %}
+
+{% block content %}
+    {{ block.super }}
+{% endblock content %}
+
+{% block main_create_center %}
+    <div class="home">
+        <h2>上传列表</h2>
+        <br>
+
+        <table class="table">
+            <thead>
+            <tr>
+                <th>视频</th>
+                <th>状态</th>
+                <th>进度</th>
+            </tr>
+            </thead>
+            <tbody id="queue-body">
+            </tbody>
+        </table>
+    </div>
+
+{% endblock main_create_center %}
+{% block custom_js %}
+    {{ block.super }}
+    <script src="/static/js/create/bootstrap-tagsinput.js"></script>
+    <script src="/static/js/create/upload_queue.js"></script>
+{% endblock custom_js %}

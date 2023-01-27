@@ -11,14 +11,13 @@ class Permission:
 
 
 class Role(models.Model):
-    id = models.IntegerField(primary_key=True)
+    id = models.AutoField(primary_key=True)
     name = models.CharField(max_length=64, unique=True)
     default = models.BooleanField(default=False, db_index=True)
     permissions = models.IntegerField()
-    users = models.ForeignKey(to="User", on_delete=models.CASCADE)
 
-    def __init__(self, **kwargs):
-        super(Role, self).__init__(**kwargs)
+    def __init__(self, *args, **kwargs):
+        super(Role, self).__init__(*args, **kwargs)
         if self.permissions is None:
             self.permissions = 0
 
@@ -76,8 +75,8 @@ class User(models.Model):
     description = models.TextField(max_length=150, null=True, blank=True)
     avatar = models.ImageField(upload_to='avatar', default="avatar/default.png")
     register_time = models.DateTimeField(auto_now_add=True)
-    video_like_list = models.JSONField(default=get_list)
-    comment_like_list = models.JSONField(default=get_list)
+    video_like_list = models.JSONField(default=get_list, blank=True)
+    comment_like_list = models.JSONField(default=get_list, blank=True)
     roles = models.ForeignKey('Role', to_field="id", on_delete=models.CASCADE)
 
     def can(self, perm):
@@ -128,8 +127,8 @@ class VideoPage(models.Model):
 
     class Meta:
         ordering = ["-id"]
-        verbose_name = "视频"
-        verbose_name_plural = "视频"
+        verbose_name = "视频列表"
+        verbose_name_plural = "视频列表"
 
 
 class Comment(models.Model):

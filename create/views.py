@@ -1,14 +1,13 @@
-import datetime
-import hashlib
-import time
+import os
 import uuid
 
 from PIL import Image, UnidentifiedImageError
-from django.core.files.uploadedfile import InMemoryUploadedFile
+from celery.result import AsyncResult
+from django.core.files.uploadedfile import InMemoryUploadedFile, TemporaryUploadedFile
 from django.http import HttpRequest, JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 
-from user.models import User, Video, VideoPage, ExamineList, TaskList
+from user.models import User, Video, VideoPage, ExamineList, TaskList, Permission
 from video import tasks
 
 
@@ -19,7 +18,7 @@ def publish_video(request: HttpRequest):
         if not session:
             return JsonResponse({"code": 10006, "msg": "账号未登录!", "data": {}})
 
-        file: InMemoryUploadedFile = request.FILES.get("files")
+        file: TemporaryUploadedFile = request.FILES.get("files")
         cover = request.FILES.get("cover")
         title = request.POST.get("title")
         description = request.POST.get("description")
@@ -56,8 +55,10 @@ def publish_video(request: HttpRequest):
         video_page.video_file = "temp/wait/" + uuid.uuid4().hex
         video_page.video = video
         video_page.save()
-
-        video_tasks = tasks.upload_video(file, "temp/wait/" + uuid.uuid4().hex, video.id)
+        path = file.temporary_file_path()
+        if not os.path.exists(path):
+            return JsonResponse({"code": -1, "msg": "内部错误: 文件不存在", "data": {}})
+        video_tasks = tasks.upload_video.delay(path, "temp/wait/" + uuid.uuid4().hex, video.id)
         task = TaskList()
         task.task_id = str(video_tasks)
         task.user = request.session.get("user")
@@ -78,7 +79,45 @@ def publish_video(request: HttpRequest):
 
 
 def get_tasks(request):
-    pass
+    a = TaskList.objects.filter(user=request.session.get("user"))
+    ls = []
+    for i in a:
+        task = AsyncResult(i.task_id)
+        ls.append({"state": str(task.state), "result": str(task.result) if type(task.result) != dict else task.result})
+    return JsonResponse({"data": ls})
+
+
+def delete_error_tasks(request):
+    user: User = request.session.get("user")
+    if not user.can(Permission.ADMIN):
+        return JsonResponse({"code": 403, "msg": "没有权限删除错误任务!"})
+    a = TaskList.objects.all()
+    count = 0
+    for i in a:
+        if AsyncResult(i.task_id).state == "FAILURE":
+            i.delete()
+            count += 1
+    return JsonResponse({"code": 0, "msg": count})
+
+
+def get_video(request):
+    video_id = request.GET.get("video_id")
+    try:
+        video = Video.objects.get(id=video_id)
+        print(video.tags.all())
+        return JsonResponse({"code": 0, "msg": "",
+                             "data": {"title": video.title, "video_id": video.id,
+                                      "author": {"name": video.author.name, "avatar": video.author.avatar.url,
+                                                 "uid": video.author.id}}})
+    except Video.DoesNotExist:
+        return JsonResponse({"code": -1, "msg": "找不到视频", "data": {}})
+
+
+def get_examine_list(request):
+    ls = []
+    for i in ExamineList.objects.all():
+        ls.append({"video_id": i.video.id, "uid": i.user.id, "status": i.status})
+    return JsonResponse({"code": 0, "msg": "", "data": ls})
 
 
 @csrf_exempt

@@ -1,5 +1,7 @@
 import json
 import os
+import threading
+import time
 
 import django
 import requests
@@ -8,18 +10,22 @@ from django.conf import settings
 from django.core.mail import EmailMultiAlternatives
 
 from obs import ObsClient
-from user.models import Video
 
 os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'video.settings')
 
 django.setup()
 
-app = Celery('celery_tasks.tasks', broker='redis://127.0.0.1:6379/0', backend='redis://127.0.0.1:6379/0')
+from user.models import Video
+
+app = Celery('video.tasks', broker='redis://127.0.0.1:6379/0', backend='redis://127.0.0.1:6379/0',
+             include=['video.tasks'])
 
 client = ObsClient(
     access_key_id=settings.OSS_ACCESS_KEY,
     secret_access_key=settings.OSS_SECRET_KEY,
     server=settings.OSS_ENDPOINT)
+
+lock = threading.Lock()
 
 
 @app.task
@@ -56,25 +62,31 @@ def verify_text(text):
         return False
 
 
-@app.task()
-def upload_video(video, name, video_id):
+@app.task(bind=True)
+def upload_video(self, video_path, video_name, video_id):
     sum_bytes_out = 0
     times_out = 0
-    video_object = Video.objects.filter(id=video_id).first()
+    id1 = self.request.id
 
     def upload_state(update_bytes, sum_bytes, times):
+        lock.acquire()
         nonlocal sum_bytes_out
         nonlocal times_out
         sum_bytes_out = sum_bytes
         times_out = times
-        upload_video.update_state(state='PROGRESS', meta={'progress': round(update_bytes / sum_bytes * 100, 2),
-                                                          "update_bytes": update_bytes, "sum_bytes": sum_bytes,
-                                                          "times": times, "video": video_object})
+        self.update_state(task_id=id1, state='PROGRESS', meta={'progress': round(update_bytes / sum_bytes * 100, 2),
+                                                               "update_bytes": update_bytes, "sum_bytes": sum_bytes,
+                                                               "times": times, "video": video_id})
+        lock.release()
 
-    resp = client.putContent(settings.OSS_BUCKET, name, content=video.read(), progressCallback=upload_state)
+    try:
+        resp = client.putFile(settings.OSS_BUCKET, video_name, video_path, progressCallback=upload_state)
+    except Exception as e:
+        self.update_state(state="FAILURE", meta=e)
+
     if resp.status > 300:
-        upload_video.update_state(state='ERROR',
-                                  meta={"error_code": resp.errorCode, "error_message": resp.errorMessage,
-                                        "video": video_object})
-    upload_video.update_state(state='SUCCESSFUL',
-                              meta={"sum_bytes": sum_bytes_out, "time": times_out, "video": video_object})
+        self.update_state(state='SUCCESS',
+                          meta={"error_code": resp.errorCode, "error_message": resp.errorMessage,
+                                "video": video_id})
+    self.update_state(state='SUCCESS',
+                      meta={"sum_bytes": sum_bytes_out, "time": times_out, "video": video_id})

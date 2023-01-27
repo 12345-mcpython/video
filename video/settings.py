@@ -197,3 +197,5 @@ CONVERT_SECERT_KEY = config['convert'].get("sk")
 CONVERT_PROJECT_ID = config['convert'].get("project_id")
 
 CONVERT_USE_BUCKET = config['convert'].get("use_bucket")
+
+FILE_UPLOAD_MAX_MEMORY_SIZE = 0

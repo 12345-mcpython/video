@@ -79,3 +79,11 @@ def upload_video(request):
     if not user:
         return redirect("/login/")
     return render(request, "create/upload_video.html", locals())
+
+
+def upload_queue(request):
+    title = settings.TITLE
+    user = request.session.get("user")
+    if not user:
+        return redirect("/login/")
+    return render(request, "create/upload_queue.html", locals())
