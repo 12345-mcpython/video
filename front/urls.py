@@ -28,5 +28,7 @@ urlpatterns = [
     path("user_center/edit_avatar/", views.edit_avatar),
     path("use_agreement/", views.use_agreement),
     path("creative_convention/", views.creative_convention),
-    path("create/upload_queue/", views.upload_queue)
+    path("create/upload_queue/", views.upload_queue),
+    path("create/examine_queue/", views.examine_queue),
+    path("create/moderate/examine/", views.examine)
 ]

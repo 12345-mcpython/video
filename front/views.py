@@ -2,6 +2,7 @@ import datetime
 
 from django.http import HttpRequest
 from django.shortcuts import render, redirect
+from user.models import Permission, User
 from django.conf import settings
 
 
@@ -70,6 +71,9 @@ def create(request):
     user = request.session.get("user")
     if not user:
         return redirect("/login/")
+    moderate = False
+    if user.can(Permission.MODERATE):
+        moderate = True
     return render(request, "create/create.html", locals())
 
 
@@ -78,6 +82,9 @@ def upload_video(request):
     user = request.session.get("user")
     if not user:
         return redirect("/login/")
+    moderate = False
+    if user.can(Permission.MODERATE):
+        moderate = True
     return render(request, "create/upload_video.html", locals())
 
 
@@ -86,4 +93,28 @@ def upload_queue(request):
     user = request.session.get("user")
     if not user:
         return redirect("/login/")
+    moderate = False
+    if user.can(Permission.MODERATE):
+        moderate = True
     return render(request, "create/upload_queue.html", locals())
+
+
+def examine_queue(request):
+    title = settings.TITLE
+    user = request.session.get("user")
+    if not user:
+        return redirect("/login/")
+    moderate = False
+    if user.can(Permission.MODERATE):
+        moderate = True
+    return render(request, "create/examine_queue.html", locals())
+
+def examine(request):
+    title = settings.TITLE
+    user = request.session.get("user")
+    if not user:
+        return redirect("/login/")
+    moderate = False
+    if user.can(Permission.MODERATE):
+        moderate = True
+    return render(request, "create/examine.html", locals())

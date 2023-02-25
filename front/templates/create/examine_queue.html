@@ -1,0 +1,71 @@
+{% extends 'create/base.html' %}
+
+{% block title %}创作中心 - {{ title }}{% endblock title %}
+
+{% block custom_css %}
+    {{ block.super }}
+{% endblock custom_css %}
+
+{% block content %}
+    {{ block.super }}
+{% endblock content %}
+
+{% block main_create_center %}
+    <div class="home">
+        <h2>审核列表</h2>
+        <br>
+
+        <table class="table">
+            <thead>
+            <tr>
+                <th>视频</th>
+                <th>状态</th>
+                <th>操作</th>
+            </tr>
+            </thead>
+            <tbody id="queue-body">
+            </tbody>
+        </table>
+    </div>
+{% endblock main_create_center %}
+{% block custom_js %}
+    {{ block.super }}
+    <script src="/static/js/create/bootstrap-tagsinput.js"></script>
+    <script>
+        $("body").ready(
+            $.ajax({
+                url: "/api/v1/create/get_examine_list",
+                type: "GET",
+                contentType: false,
+                processData: false,
+                success: function (data) {
+                    const base_html = "<td><button type=\"button\" class=\"btn btn-danger\">撤回审核</button>"
+                    const base_html_tong = "<td><button type=\"button\" class=\"btn btn-danger\" disabled>撤回审核</button>"
+                    let html = ""
+                    for (let i in data['data']) {
+                        i = data['data'][i]
+                        html += "<tr>"
+                        html += "<td>" + i['video_id'] + "</td>"
+                        if (i['status'] === 0) {
+                            html += "<td>" + "审核中" + "</td>"
+                            html += base_html
+                        } else if (i['status'] === 1) {
+                            html += "<td>" + "审核通过" + "</td>"
+                            html += base_html_tong
+                        } else if (i['status'] === -1) {
+                            html += "<td>" + "审核不通过" + i['reason'] + "</td>"
+                            html += base_html_tong
+                        }
+
+                        html += "</tr>"
+
+                    }
+                    $("#queue-body").html(html)
+                },
+                error: function (data) {
+                    console.log(data)
+                }
+            })
+        )
+    </script>
+{% endblock custom_js %}

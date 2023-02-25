@@ -100,6 +100,17 @@ def delete_error_tasks(request):
     return JsonResponse({"code": 0, "msg": count})
 
 
+def delete_all_tasks(request):
+    user: User = request.session.get("user")
+    if not user.can(Permission.ADMIN):
+        return JsonResponse({"code": 403, "msg": "没有权限删除任务!"})
+    count = 0
+    for i in TaskList.objects.all():
+        i.delete()
+        count += 1
+    return JsonResponse({"code": 0, "msg": count})
+
+
 def get_video(request):
     video_id = request.GET.get("video_id")
     try:

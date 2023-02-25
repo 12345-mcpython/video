@@ -133,18 +133,21 @@
 
                 <li class="mb-1">
                     <button class="btn btn-toggle align-items-center rounded collapsed" data-bs-toggle="collapse"
-                            data-bs-target="#orders-collapse" aria-expanded="false">
+                            data-bs-target="#orders-collapse" aria-expanded="true">
                         内容管理
                     </button>
-                    <div class="collapse" id="orders-collapse">
+                    <div class="collapse show" id="orders-collapse">
                         <ul class="btn-toggle-nav list-unstyled fw-normal pb-1 small">
-                            <li><a href="#" class="link-dark rounded">审核队列</a></li>
+                            <li><a href="/create/examine_queue" class="link-dark rounded">审核队列</a></li>
+                            {% if moderate %}
+                            <li><a href="/create/moderate/examine/" class="link-dark rounded">视频审核 (管理员)</a></li>
+                            {% endif %}
                         </ul>
                     </div>
                 </li>
                 <!--<li class="border-top my-3"></li>-->
                 <li class="mb-1">
-                    <a href="#" class="btn btn-toggle-1 align-items-center rounded link-dark rounded">数据管理</a>
+                    <a href="#" class="btn btn-toggle-1 btn-toggle-nav align-items-center link-dark ">数据管理</a>
                 </li>
             </ul>
         </div>

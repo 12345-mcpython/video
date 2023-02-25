@@ -23,5 +23,6 @@ urlpatterns = [
     path("get_tasks", views.get_tasks),
     path("get_video", views.get_video),
     path("get_examine_list", views.get_examine_list),
-    path("delete_error_tasks", views.delete_error_tasks)
+    path("delete_error_tasks", views.delete_error_tasks),
+    path('delete_all_tasks', views.delete_all_tasks)
 ]
