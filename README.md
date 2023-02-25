@@ -26,6 +26,6 @@
 
 ## 备注
 
-界面设计极其 ~~高端~~ 垃圾, 如果有好心人帮我修改可以发一下PR.
+界面使用Vue 重写, 仓库见 https://github.com/12345-mcpython/video-front
 
 如果有安全漏洞请发email: m15043340061@163.com
